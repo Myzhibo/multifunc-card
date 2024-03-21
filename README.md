@@ -2,23 +2,20 @@
 
 ## Project setup
 ```
-yarn install
+npm i multifunc-card
 ```
+## functions
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+### Attributes
+| 属性 | 描述 | 类型 | 可选值 | 默认值 | 
+| :--: | :--: | :--: |  :--: | :--: |  
+| selectMode | 是否开启可选模式 | Boolean | | |
+| data | 卡片对象 | Object | | | 
+| content | 展现在卡片上的内容 | String | | |  
 
-### Compiles and minifies for production
-```
-yarn build
-```
+### Slot
 
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Events
+| 方法 | 描述 |
+| :--: | :--: |
+| select | 开启可选模式后，选择卡片时的回调 |

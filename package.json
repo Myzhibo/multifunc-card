@@ -1,14 +1,28 @@
 {
   "name": "multifunc-card",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
+  "description": "el-card二次封装多功能card",
+  "private": false,
+  "main": "lib/multi-func-card.umd.min.js",
+  "keywords": [
+    "card"
+  ],
+  "author": {
+    "name": "doubo"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lib": "vue-cli-service build --target lib --name multi-func-card -dest lib plugins/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "element-ui": "^2.15.14",
+    "node-sass": "^4.14.1",
+    "sass": "^1.68.0",
+    "sass-loader": "^8.0.2",
+    "sass-resources-loader": "^2.2.5",
     "vue": "^2.6.11"
   },
   "devDependencies": {
