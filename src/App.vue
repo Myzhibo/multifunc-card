@@ -15,7 +15,12 @@
       :data="text1"
       :content="text1.name"
       :selectMode = "true"
+      :deletable = "true"
+      keyword = "a"
+      keywordColor = "red"
+      keywordBackGround = "pink"
       @select="getSelect"
+      @getHidden="getHidden"
     />
     <MultifuncCard
       :data="text2"
@@ -48,6 +53,11 @@ export default {
     getSelect(data){
       console.log(data);
       console.log(1111111111);
+    },
+    getHidden(data){
+      console.log(data);
+      console.log(22222222);
+      console.log(22222222);
     }
   }
 }
