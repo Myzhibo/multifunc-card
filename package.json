@@ -1,7 +1,7 @@
 {
   "name": "multifunc-card",
-  "version": "0.1.1",
-  "description": "el-card二次封装多功能card",
+  "version": "0.2.1",
+  "description": "支持内容文字高亮",
   "private": false,
   "main": "lib/multi-func-card.umd.min.js",
   "keywords": [
