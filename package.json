@@ -1,7 +1,7 @@
 {
   "name": "multifunc-card",
-  "version": "0.2.1",
-  "description": "支持内容文字高亮",
+  "version": "0.2.4",
+  "description": "支持自定义操作表单",
   "private": false,
   "main": "lib/multi-func-card.umd.min.js",
   "keywords": [

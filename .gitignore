@@ -22,7 +22,6 @@ pnpm-debug.log*
 *.sw?
 
 src/
-plugins/
 public/
 vue.config.js
 babel.config.js
