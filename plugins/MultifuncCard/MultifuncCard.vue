@@ -23,29 +23,27 @@
       >
           <!-- 删除文章篮图标显隐 -->
           <div
-            v-if="deletable"
+            v-if="deletable && ishoverCard"
             class="text-card-container-left"
             style="position: absolute; top: 0px; right: 0px; cursor: pointer"
           >
             <i
-              class="el-icon-error"
-              style="color: rgba(190, 32, 32, 0.822); font-size: 23px"
-              @click.stop="deleteSingleData" />
+              class="el-icon-error deleteIcon"
+              style="color: rgba(171, 50, 50, 0.822) ; font-size: 23px"
+              @click.stop="deleteSingleCard" />
           </div>
           <div
             v-show="multiDelete"
             :class="{ active: isActive }"
             style="position: absolute; top: 0px; right: 0px; cursor: pointer"
           >
-            <i class="el-icon-error" style="font-size: 23px" />
+            <i class="el-icon-error deleteIcon" style="font-size: 23px" />
           </div>
 
           <!-- 内容  -->
-          <div style="display: flex; align-items: center; justify-content: space-between;">
+          <!-- <div style="display: flex; align-items: center; justify-content: space-between;">
               <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
-              <div v-html="highlight( content )">
-                
-              </div>
+              <div v-html="highlight( content )" />
               <div class="c-readingset-item-inner-ops">
                 <el-dropdown @click.native.stop @command="handleCommand($event, data)">
                   <span class="el-dropdown-link">
@@ -57,8 +55,22 @@
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
+          </div> -->
+          <div style="display: flex; align-items: center; justify-content: center; position:relative">
+              <div v-html="highlight( content )" style="width:90%" />
+              <div class="c-readingset-item-inner-ops" style="position:absolute; right:-15px;">
+                <el-dropdown @click.native.stop @command="handleCommand($event, data)">
+                  <span class="el-dropdown-link">
+                    <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="op of options">
+                      {{op.title}}
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>
           </div>
-
 
           <!-- footer -->
           <div class="footer" v-if="!footerHidden">
@@ -76,15 +88,21 @@ export default {
   name: 'CP_MyCard',
   data(){
     return {
+      ishoverCard: false,
+
       isActive: false,
     }
   },
   props: {
+    // 是否开启可选模式
+    selectMode: {
+      type: Boolean,
+      default: false,     
+    },
     // 卡片对象
     data: Object,
     // 卡片内容
     content: String,
-    // serial_num,   // 卡片序号
     // 高亮关键词
     keyword: String,
     // 高亮关键词 字体颜色
@@ -97,6 +115,18 @@ export default {
       type: String,
       default: 'skyblue',
     },
+    // 是否开启操作表单
+    operable: {        
+      type: Boolean,
+      default: true,
+    },
+    // 表单内容
+    options: {        
+      type: Array,
+      default: [],
+    },
+
+
     unfit: {        // 不合适
       type: Boolean,
       default: false,
@@ -108,6 +138,7 @@ export default {
     // headerHidden,
     // source,
     // currentNode,  // readingset页当前卡片所在节点
+    // serial_num,   // 卡片序号
     abstractHidden: {
       type: Boolean,
       default: false,
@@ -135,10 +166,6 @@ export default {
     mode: {
       type: Number,
       default: 1,      // 1 - 英文，2 - 中文，3 - 中英文
-    },
-    selectMode: {
-      type: Boolean,
-      default: false,      // 是否开启可选模式
     },
     open: {
       type: Boolean,
@@ -180,15 +207,16 @@ export default {
     },
     // 鼠标移入卡片
     hoverCard() {
-      console.log(this.data._id);
-      this.$emit('getHidden', false, this.data._id);
+      this.ishoverCard = true;
+      this.$emit('getHidden', this.ishoverCard, this.data);
     },
     // 鼠标移出卡片
     leaveCard() {
-      this.$emit('getHidden', true, '');
+      this.ishoverCard = false;
+      this.$emit('getHidden', this.ishoverCard, {});
     },
-    deleteSingleData() {
-      this.$emit('deleteSingleData', this.data)
+    deleteSingleCard() {
+      this.$emit('deleteSingleCard', this.data)
     },
     // 鼠标点击卡片
     handleCardClick() {
@@ -240,7 +268,7 @@ export default {
 
 <style scoped lang="scss">
 .active {
-  color: rgba(190, 32, 32, 0.822);
+  color: rgba(190, 32, 32, 1);
 }
 // 设置文字自适应
 .dynamic_font2 {
@@ -401,5 +429,8 @@ export default {
       margin-right: 10px;
     }
   }
+}
+::v-deep .deleteIcon:hover {
+  color: rgba(190, 32, 32, 1) !important;
 }
 </style>

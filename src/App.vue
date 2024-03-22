@@ -21,6 +21,7 @@
       keywordBackGround = "pink"
       @select="getSelect"
       @getHidden="getHidden"
+      @deleteSingleCard="deleteSingleCard"
     />
     <MultifuncCard
       :data="text2"
@@ -52,12 +53,12 @@ export default {
   methods: {
     getSelect(data){
       console.log(data);
-      console.log(1111111111);
     },
-    getHidden(data){
+    getHidden(status, data){
+      console.log(status, data);
+    },
+    deleteSingleCard(data){
       console.log(data);
-      console.log(22222222);
-      console.log(22222222);
     }
   }
 }
