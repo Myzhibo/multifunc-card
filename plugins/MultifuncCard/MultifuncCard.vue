@@ -64,9 +64,9 @@
                     <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="op of options">
+                    <!-- <el-dropdown-item v-for="op of options">
                       {{op.title}}
-                    </el-dropdown-item>
+                    </el-dropdown-item> -->
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
@@ -123,7 +123,7 @@ export default {
     // 表单内容
     options: {        
       type: Array,
-      default: [],
+      default: () => [],
     },
 
 
