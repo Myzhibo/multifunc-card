@@ -9,6 +9,7 @@ npm i multifunc-card
 ### Attributes
 | 属性 | 描述 | 类型 | 可选值 | 默认值 | 例子
 | :--: | :--: | :--: | :--: | :--: | :--: |
+| shadow | 设置阴影显示时机 | string | always / hover / never | always | - |
 | selectable | 是否开启可选模式 | Boolean | - | false | - |
 | data | 卡片对象 | Object | - | - | - |
 | content | 展现在卡片上的内容 | String | - | - | - |

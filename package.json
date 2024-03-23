@@ -1,7 +1,7 @@
 {
   "name": "multifunc-card",
-  "version": "1.0.1",
-  "description": "支持自定义操作表单、支持订阅模式、支持头部底部内容区",
+  "version": "0.3.1",
+  "description": "支持el-card原始的attrs可以被使用",
   "private": false,
   "main": "lib/multi-func-card.umd.min.js",
   "keywords": [

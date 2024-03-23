@@ -9,6 +9,7 @@
       :multiDelete="multiDelete"
       @getId="getId" -->
     <MultifuncCard
+      shadow="hover"
       :data="text1"
       :content="text1.name"
       :selectable = "true"
@@ -22,7 +23,7 @@
           {key: 'edit', title: '编辑'},
           {key: 'delete', title: '删除'},
       ]"
-      :subscribe="-1"
+      :subscribe="1"
       :headerable="true"
       :footerable="true"
       @select="getSelect"

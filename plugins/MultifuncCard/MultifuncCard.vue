@@ -4,14 +4,16 @@
       slot="signal"
       class="text-card-container"
       style="position: relative; margin-bottom: 10px"
-      :class="{ 'select-mode': selectMode }"
+      :class="{ 'select-mode': selectable }"
     >
       <!-- 是否可选模式 -->
-      <el-checkbox v-if="selectMode" v-model="data.checked" style="margin-right: 10px;" @change="getBeChecked" />
+      <el-checkbox v-if="selectable" v-model="data.checked" style="margin-right: 10px;" @change="getBeChecked" />
       <!-- 卡片 -->
       <el-card
+        ref="elCard"
+        v-bind="this.$attrs"
+
         style="width: 100%"
-        shadow="hover"
         @mouseenter.native="hoverCard"
         @mouseleave.native="leaveCard"
         @click.native="handleCardClick"
@@ -20,6 +22,10 @@
           subscribe === 1 ? 'subscribe' : (subscribe === -1 ? 'unSubscribe' : ''),
         ]"
       >
+          <!-- 继承ui组件本身的插槽 -->
+          <template v-for="(value, name) in $slots" #[name]="scopedData">
+            <slot :name="name" v-bind="scopedData"></slot>
+          </template>
           <!-- 删除文章篮图标显隐 -->
           <div
             v-if="deletable && ishoverCard"
@@ -82,7 +88,7 @@ export default {
   },
   props: {
     // 是否开启可选模式
-    selectMode: {
+    selectable: {
       type: Boolean,
       default: false,     
     },
@@ -134,17 +140,11 @@ export default {
     },
 
 
-    // source,
-    // currentNode,  // readingset页当前卡片所在节点
-    // serial_num,   // 卡片序号
 
     open: {
       type: Boolean,
       default: false,      // 开启过渡动画
     },
-
-
-
     multiDelete: {
       type: Boolean,
       default: false,   // 是否开启批量删除模式
@@ -157,7 +157,10 @@ export default {
   components: {
   },
   mounted(){
-    console.log(this.data);
+    // const elCard = this.$refs.elCard;
+    // for (const key in elCard) {
+    //   this[key] = elCard[key];
+    // }
   },
   watch: {
     cancelSelected() {
@@ -203,7 +206,7 @@ export default {
     },
     // 鼠标点击卡片
     handleCardClick() {
-      if (this.selectMode) {
+      if (this.selectable) {
         this.$set(this.data, 'checked', !this.data.checked);
         this.$emit('select', this.data);
         return;
