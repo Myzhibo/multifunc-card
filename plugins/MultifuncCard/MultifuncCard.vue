@@ -17,8 +17,7 @@
         @click.native="handleCardClick"
         :class="[
           data.inBasket ? 'in-basket' : '',
-          unfit ? 'unfit' : '',
-          subscribe ? 'subscribe' : '',
+          subscribe === 1 ? 'subscribe' : (subscribe === -1 ? 'unSubscribe' : ''),
         ]"
       >
           <!-- 删除文章篮图标显隐 -->
@@ -32,6 +31,7 @@
               style="color: rgba(171, 50, 50, 0.822) ; font-size: 23px"
               @click.stop="deleteSingleCard" />
           </div>
+          <!-- 批量删除文章篮图标显隐 -->
           <div
             v-show="multiDelete"
             :class="{ active: isActive }"
@@ -39,44 +39,31 @@
           >
             <i class="el-icon-error deleteIcon" style="font-size: 23px" />
           </div>
-
-          <!-- 内容  -->
-          <!-- <div style="display: flex; align-items: center; justify-content: space-between;">
-              <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
-              <div v-html="highlight( content )" />
-              <div class="c-readingset-item-inner-ops">
-                <el-dropdown @click.native.stop @command="handleCommand($event, data)">
-                  <span class="el-dropdown-link">
-                    <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="edit">编辑</el-dropdown-item>
-                    <el-dropdown-item command="delete">删除</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </div>
-          </div> -->
+          <!-- header -->
+          <div v-if="headerable" class="text-card-container-header" >
+            <slot name="header-content"></slot>
+          </div>
+          <!-- 正文内容 -->
           <div style="display: flex; align-items: center; justify-content: center; position:relative">
               <div v-html="highlight( content )" style="width:90%" />
-              <div class="c-readingset-item-inner-ops" style="position:absolute; right:-15px;">
+              <div v-if="operable" class="c-readingset-item-inner-ops" style="position:absolute; right:-15px;">
                 <el-dropdown @click.native.stop @command="handleCommand($event, data)">
                   <span class="el-dropdown-link">
                     <el-link :underline="false"> <i class="el-icon-more" style="font-size: 20px" /> </el-link>
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <!-- <el-dropdown-item v-for="op of options">
+                    <el-dropdown-item :command="op.key" :key="op.key" v-for="op of options">
                       {{op.title}}
-                    </el-dropdown-item> -->
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </div>
           </div>
-
           <!-- footer -->
-          <div class="footer" v-if="!footerHidden">
+          <div class="footer" v-if="footerable">
             <!-- 为父组件放置一个插槽 -->
-            <slot name="option"></slot>    <!-- 只放置插槽、用来[接收]父组件传值 -->
-            <slot name="button_option" :text="data"></slot>     <!-- 放置插槽并[向]父组件传值 -->
+            <slot name="footer-content"></slot>    <!-- 具名插槽： 只放置插槽、用来[接收]父组件传值 -->
+            <!-- <slot name="footer-content-getData" :data="data"></slot>     放置一个作用域插槽并[向]父组件传值 -->
           </div>
       </el-card>
     </div>
@@ -103,6 +90,16 @@ export default {
     data: Object,
     // 卡片内容
     content: String,
+    // 是否开启卡片头部
+    headerable: {
+      type: Boolean,
+      default: true,    
+    },
+    // 是否开启卡片底部
+    footerable: {
+      type: Boolean,
+      default: true,    
+    },
     // 高亮关键词
     keyword: String,
     // 高亮关键词 字体颜色
@@ -115,6 +112,11 @@ export default {
       type: String,
       default: 'skyblue',
     },
+    // 是否支持删除
+    deletable: {
+      type: Boolean,
+      default: false,
+    },
     // 是否开启操作表单
     operable: {        
       type: Boolean,
@@ -125,36 +127,24 @@ export default {
       type: Array,
       default: () => [],
     },
+    // 订阅
+    subscribe: {    
+      type: Number,
+      default: 0,
+    },
 
 
-    unfit: {        // 不合适
-      type: Boolean,
-      default: false,
-    },
-    subscribe: {    // 订阅
-      type: Boolean,
-      default: false,
-    },
-    // headerHidden,
     // source,
     // currentNode,  // readingset页当前卡片所在节点
     // serial_num,   // 卡片序号
-    abstractHidden: {
+
+    open: {
       type: Boolean,
-      default: false,
+      default: false,      // 开启过渡动画
     },
-    textHidden: {
-      type: Boolean,
-      default: false,
-    },
-    footerHidden: {
-      type: Boolean,
-      default: false,    // 是否隐藏卡片底部
-    },
-    deletable: {
-      type: Boolean,
-      default: false,    // 是否隐藏删除icon
-    },
+
+
+
     multiDelete: {
       type: Boolean,
       default: false,   // 是否开启批量删除模式
@@ -162,14 +152,6 @@ export default {
     cancelSelected: {
       type: Boolean,
       default: false,   // 是否取消批量删除选中的卡片
-    },
-    mode: {
-      type: Number,
-      default: 1,      // 1 - 英文，2 - 中文，3 - 中英文
-    },
-    open: {
-      type: Boolean,
-      default: false,      // 开启过渡动画
     },
   },
   components: {
@@ -179,11 +161,11 @@ export default {
   },
   watch: {
     cancelSelected() {
-        if (this.cancelSelected === false) {
-          this.isActive = false;
-        } else {
-          this.isActive = true;
-        }
+      if (this.cancelSelected === false) {
+        this.isActive = false;
+      } else {
+        this.isActive = true;
+      }
     }
   },
   methods:{
@@ -208,13 +190,14 @@ export default {
     // 鼠标移入卡片
     hoverCard() {
       this.ishoverCard = true;
-      this.$emit('getHidden', this.ishoverCard, this.data);
+      this.$emit('hoverCard', this.ishoverCard, this.data);
     },
     // 鼠标移出卡片
     leaveCard() {
       this.ishoverCard = false;
-      this.$emit('getHidden', this.ishoverCard, {});
+      this.$emit('hoverCard', this.ishoverCard, this.data);
     },
+    // 删除卡片
     deleteSingleCard() {
       this.$emit('deleteSingleCard', this.data)
     },
@@ -228,37 +211,12 @@ export default {
       if (this.multiDelete) {
         return this.clickDelete();
       }
-      return this.clickCard(this.$route.path);
-    },
-    // 点击卡片事件 -- 批量删除
-    clickDelete() {
-      this.isActive = !this.isActive;
-      this.$emit('getId', this.data._id);
-    },
-    // 点击卡片事件 -- 点击卡片
-    clickCard(router) {
-      console.log(this.$route.path);
-      if (router === '/fullTextLib') {
-        this.$router.push({
-          path: '/editFullText',
-          name: 'editFullText',
-          params: this.data,
-          query: { id: this.data._id },
-        });
-      }
-      console.log(this.data);
+      this.$emit('select', this.data);
     },
     // 操作
-    handleCommand(e, item) {
-      this.book = item;
-      if (e === 'delete') {
-        console.log(item);
-      }
-      if (e === 'edit') {
-        console.log(item);
-        this.bookName = item.name;
-        this.displayEditDialog = true;
-      }
+    handleCommand(key, item) {
+      // this.book = item;
+      this.$emit('handleMenu', key, item);
     }
     
   },
@@ -345,7 +303,7 @@ export default {
   background-color: rgb(233, 253, 233);
 }
 
-.unfit {
+.unSubscribe {
   background-color: rgb(253, 233, 233);
 }
 
@@ -367,10 +325,9 @@ export default {
 }
 
 .footer{
-  // background-color: pink;
-  display: flex;
-  align-items: center;
-  justify-content: space-between; 
+  // display: flex;
+  // align-items: center;
+  // justify-content: space-between; 
   
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-top: 10px;
