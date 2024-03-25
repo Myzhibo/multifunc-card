@@ -1,6 +1,6 @@
 {
   "name": "multifunc-card",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "修复一下已知的bug",
   "private": false,
   "main": "lib/multi-func-card.umd.min.js",

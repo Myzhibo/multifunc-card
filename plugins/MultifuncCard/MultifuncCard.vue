@@ -126,7 +126,7 @@ export default {
     // 是否开启操作表单
     operable: {        
       type: Boolean,
-      default: true,
+      default: false,
     },
     // 表单内容
     options: {        
