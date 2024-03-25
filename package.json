@@ -1,7 +1,7 @@
 {
   "name": "multifunc-card",
-  "version": "0.3.1",
-  "description": "支持el-card原始的attrs可以被使用",
+  "version": "0.3.2",
+  "description": "修复一下已知的bug",
   "private": false,
   "main": "lib/multi-func-card.umd.min.js",
   "keywords": [
