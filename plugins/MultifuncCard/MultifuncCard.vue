@@ -18,7 +18,7 @@
         @mouseleave.native="leaveCard"
         @click.native="handleCardClick"
         :class="[
-          data.inBasket ? 'in-basket' : '',
+          // data.inBasket ? 'in-basket' : '',
           subscribe === 1 ? 'subscribe' : (subscribe === -1 ? 'unSubscribe' : ''),
         ]"
       >

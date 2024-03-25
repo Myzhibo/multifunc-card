@@ -26,7 +26,7 @@ npm i multifunc-card
 |  | - options | 表单内容 | Array[Object] | [] | [{key: 'edit', title: '编辑'}] |
 
 ### Slot
-| 方法 | 类型 | 描述 |
+| slot名 | 类型 | 描述 |
 | :--: | :--: | :--: |
 | header-content | 具名插槽 | 开启头部内容区后，可向卡片顶部放置内容的插槽 | 
 | footer-content | 具名插槽 | 开启底部内容区后，可向卡片底部放置内容的插槽 | 
